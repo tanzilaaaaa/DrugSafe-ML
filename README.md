@@ -190,13 +190,13 @@ jupyter notebook notebooks/eda_analysis.ipynb
 
 ##  Advanced Features
 
-### 🔬 Feature Engineering
+###  Feature Engineering
 - **Drug Embeddings**: Vector representations based on interaction patterns
 - **Statistical Features**: Group statistics and aggregations
 - **Interaction Features**: Drug pair frequencies and class combinations
 - **Categorical Encoding**: Label encoding for drug classes
 
-### ⚙️ Model Optimization
+###  Model Optimization
 - **Hyperparameter Tuning**: Grid search with 5-fold cross-validation
 - **Feature Selection**: Automated selection of most important features
 - **Data Balancing**: SMOTE and other techniques for class imbalance
