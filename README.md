@@ -5,9 +5,9 @@ An advanced educational machine learning project that identifies potential drug-
 ## ⚠️ Educational Disclaimer
 This project is developed **strictly for educational purposes** and should **NEVER** be used for real-world medical decisions. Always consult qualified healthcare professionals for medical advice.
 
-## 🌟 Key Features
+##  Key Features
 
-### 🎯 Core Functionality
+###  Core Functionality
 - **Drug-drug interaction detection** using multiple ML algorithms
 - **Severity classification** (Low, Moderate, High) with confidence scores
 - **Alternative drug suggestions** for high-severity interactions
@@ -15,7 +15,7 @@ This project is developed **strictly for educational purposes** and should **NEV
 - **Interactive web interface** with modern UI/UX
 
 
-### 🧠 Advanced ML Pipeline
+###  Advanced ML Pipeline
 - **Feature Engineering**: Drug embeddings, interaction features, statistical features
 - **Feature Selection**: SelectKBest, Recursive Feature Elimination (RFE)
 - **Data Balancing**: SMOTE, under-sampling, combined techniques
@@ -23,7 +23,7 @@ This project is developed **strictly for educational purposes** and should **NEV
 - **Model Ensemble**: Voting classifier combining best models
 - **Cross-validation Analysis**: Robust performance estimation
 
-### 🤖 Machine Learning Models
+###  Machine Learning Models
 #### Basic Models
 - **Logistic Regression** - Linear classification baseline
 - **Decision Tree** - Rule-based interpretable model
@@ -37,7 +37,7 @@ This project is developed **strictly for educational purposes** and should **NEV
 - **AdaBoost** - Adaptive boosting algorithm
 - **Ensemble Methods** - Voting classifier combining best models
 
-### 🎨 Modern Web Interface
+###  Modern Web Interface
 - **Responsive Design** - Works on all devices
 - **Interactive Elements** - Hover effects, animations, ripple buttons
 - **Real-time Validation** - Form validation and progress indicators
@@ -45,7 +45,7 @@ This project is developed **strictly for educational purposes** and should **NEV
 - **CSV Upload** - Drag-and-drop file processing
 - **Enhanced Notifications** - Toast notifications and loading overlays
 
-## 🛠️ Technical Stack
+##  Technical Stack
 
 ### Backend
 - **Python 3.8+** - Core programming language
@@ -67,7 +67,7 @@ This project is developed **strictly for educational purposes** and should **NEV
 - **Git** - Version control
 - **Virtual Environment** - Dependency management
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 drug-interaction-checker/
@@ -98,7 +98,7 @@ drug-interaction-checker/
 └── 📄 README.md                # This file
 ```
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Clone the Repository
 ```bash
@@ -130,9 +130,9 @@ python3 src/main.py
 jupyter notebook notebooks/eda_analysis.ipynb
 ```
 
-## 🎯 Usage Guide
+##  Usage Guide
 
-### 🌐 Web Interface Features
+###  Web Interface Features
 
 #### **Home Section**
 - **Single Drug Check**: Enter two drug names for instant analysis
@@ -162,7 +162,7 @@ jupyter notebook notebooks/eda_analysis.ipynb
 - **Batch Processing**: CSV upload instructions
 - **Understanding Results**: Interpreting predictions and confidence scores
 
-### 📊 CSV Batch Processing
+###  CSV Batch Processing
 1. **Download Sample**: Get a template CSV file
 2. **Prepare Data**: Format as `drug1,drug2` (one pair per line)
 3. **Upload File**: Drag and drop or browse for your CSV
@@ -171,7 +171,7 @@ jupyter notebook notebooks/eda_analysis.ipynb
 
 
 
-## 📈 Model Performance
+##  Model Performance
 
 | Model Category | Best F1-Score | Accuracy | Features |
 |----------------|---------------|----------|----------|
@@ -188,7 +188,7 @@ jupyter notebook notebooks/eda_analysis.ipynb
 
 
 
-## 🧪 Advanced Features
+##  Advanced Features
 
 ### 🔬 Feature Engineering
 - **Drug Embeddings**: Vector representations based on interaction patterns
@@ -204,7 +204,7 @@ jupyter notebook notebooks/eda_analysis.ipynb
 
 
 
-## 🎓 Educational Objectives
+##  Educational Objectives
 
 ### Data Science Concepts
 - ✅ Data preprocessing and cleaning
@@ -232,7 +232,7 @@ jupyter notebook notebooks/eda_analysis.ipynb
 
 
 
-## 🔒 Limitations & Disclaimers
+##  Limitations & Disclaimers
 
 ### ⚠️ Educational Purpose Only
 - This is a **learning project** for academic purposes
@@ -240,13 +240,13 @@ jupyter notebook notebooks/eda_analysis.ipynb
 - **Simplified data model** for educational clarity
 - **Synthetic dataset** (not real clinical data)
 
-### 🚫 Technical Limitations
+###  Technical Limitations
 - Training dataset uses 15 drugs for demonstration (but can predict on any drug name)
 - Simplified interaction modeling
 - No real-time clinical integration
 - Basic severity classification
 
-### 🏥 Safety Warnings
+###  Safety Warnings
 - **NEVER use for medical decisions**
 - **Always consult healthcare professionals**
 - **Not a substitute for clinical expertise**
@@ -268,11 +268,11 @@ This educational project welcomes contributions for learning purposes:
 - Include tests for new features
 - Update README for significant changes
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - **Scikit-learn** community for excellent ML tools
 - **Flask** team for the web framework
@@ -280,12 +280,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Font Awesome** for beautiful icons
 - **Educational institutions** promoting open-source learning
 
-## 📞 Support & Documentation
+##  Support & Documentation
 
 ### Getting Help
-- 📖 Check the **Help section** in the web interface
-- � RExamine the **Jupyter notebooks** for analysis examples
-- � Teast with the **interactive web interface**
+-  Check the **Help section** in the web interface
+-  RExamine the **Jupyter notebooks** for analysis examples
+-  Teast with the **interactive web interface**
 
 
 
