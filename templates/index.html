@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drug Interaction Checker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-pills me-2"></i>Drug Interaction Checker
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="#" onclick="showSection('main')">Home</a>
+                <a class="nav-link" href="#" onclick="showSection('about')">About</a>
+                <a class="nav-link" href="#" onclick="showSection('models')">Models</a>
+                <a class="nav-link" href="#" onclick="showSection('database')">Drug Database</a>
+                <a class="nav-link" href="#" onclick="showSection('help')">Help</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Warning Banner -->
+        <div class="alert alert-warning" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Educational Purpose Only:</strong> This tool is for educational purposes only. 
+            Do not use for real medical decisions. Always consult healthcare professionals.
+        </div>
+
+        <!-- Main Section -->
+        <div id="main-section">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-search me-2"></i>Check Drug Interactions</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="interactionForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="drug1" class="form-label">First Drug</label>
+                                            <input type="text" class="form-control" id="drug1" 
+                                                   placeholder="Enter first drug name" required>
+                                            <div class="form-text">e.g., Warfarin, Aspirin, Metformin</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="drug2" class="form-label">Second Drug</label>
+                                            <input type="text" class="form-control" id="drug2" 
+                                                   placeholder="Enter second drug name" required>
+                                            <div class="form-text">e.g., Lisinopril, Ibuprofen, Omeprazole</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-check me-2"></i>Check Interaction
+                                </button>
+                                <button type="button" class="btn btn-secondary ms-2" id="clearBtn">
+                                    <i class="fas fa-times me-2"></i>Clear
+                                </button>
+                            </form>
+
+                            <!-- Loading Spinner -->
+                            <div id="loadingSpinner" class="text-center mt-3" style="display: none;">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Analyzing drug interaction...</p>
+                            </div>
+
+                            <!-- Results -->
+                            <div id="results" class="mt-4" style="display: none;">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5><i class="fas fa-chart-line me-2"></i>Prediction Results</h5>
+                                    </div>
+                                    <div class="card-body" id="resultsContent">
+                                        <!-- Results will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Batch Processing -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h4><i class="fas fa-list me-2"></i>Batch Processing</h4>
+                        </div>
+                        <div class="card-body">
+                            <p>Analyze multiple drug combinations at once using either method below:</p>
+                            
+                            <!-- Batch Processing Tabs -->
+                            <ul class="nav nav-tabs" id="batchTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="manual-tab" data-bs-toggle="tab" data-bs-target="#manual-input" type="button" role="tab">
+                                        <i class="fas fa-keyboard me-2"></i>Manual Input
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="file-tab" data-bs-toggle="tab" data-bs-target="#file-upload" type="button" role="tab">
+                                        <i class="fas fa-file-csv me-2"></i>CSV Upload
+                                    </button>
+                                </li>
+                            </ul>
+                            
+                            <div class="tab-content mt-3" id="batchTabContent">
+                                <!-- Manual Input Tab -->
+                                <div class="tab-pane fade show active" id="manual-input" role="tabpanel">
+                                    <div class="mb-3">
+                                        <label for="batchInput" class="form-label">Drug Pairs (one per line, format: Drug1,Drug2)</label>
+                                        <textarea class="form-control" id="batchInput" rows="5" 
+                                                  placeholder="Warfarin,Aspirin&#10;Metformin,Lisinopril&#10;Atorvastatin,Omeprazole"></textarea>
+                                        <div class="form-text">Enter each drug pair on a new line, separated by a comma</div>
+                                    </div>
+                                    <button type="button" class="btn btn-success" id="batchProcessBtn">
+                                        <i class="fas fa-play me-2"></i>Process Batch
+                                    </button>
+                                </div>
+                                
+                                <!-- File Upload Tab -->
+                                <div class="tab-pane fade" id="file-upload" role="tabpanel">
+                                    <div class="mb-3">
+                                        <label for="csvFile" class="form-label">Upload CSV File</label>
+                                        <input type="file" class="form-control" id="csvFile" accept=".csv,.txt" />
+                                        <div class="form-text">
+                                            Upload a CSV file with drug pairs. Format: <code>drug1,drug2</code> (one pair per line)
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- CSV Preview -->
+                                    <div id="csvPreview" class="mb-3" style="display: none;">
+                                        <div class="card bg-light">
+                                            <div class="card-header">
+                                                <h6><i class="fas fa-eye me-2"></i>File Preview</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="csvPreviewContent"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex gap-2">
+                                        <button type="button" class="btn btn-primary" id="loadCsvBtn" disabled>
+                                            <i class="fas fa-upload me-2"></i>Load CSV
+                                        </button>
+                                        <button type="button" class="btn btn-success" id="processCsvBtn" disabled>
+                                            <i class="fas fa-play me-2"></i>Process CSV Data
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" id="downloadSampleBtn">
+                                            <i class="fas fa-download me-2"></i>Download Sample CSV
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="batchResults" class="mt-3" style="display: none;">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6><i class="fas fa-chart-bar me-2"></i>Batch Results</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="batchResultsContent"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <!-- Model Information -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-info-circle me-2"></i>Model Information</h5>
+                        </div>
+                        <div class="card-body" id="modelInfo">
+                            <div class="text-center">
+                                <div class="spinner-border spinner-border-sm" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Loading model information...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5><i class="fas fa-chart-bar me-2"></i>Quick Stats</h5>
+                        </div>
+                        <div class="card-body" id="quickStats">
+                            <div class="text-center">
+                                <div class="spinner-border spinner-border-sm" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Loading statistics...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Available Drugs -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5><i class="fas fa-pills me-2"></i>Available Drugs</h5>
+                        </div>
+                        <div class="card-body" id="drugList">
+                            <div class="text-center">
+                                <div class="spinner-border spinner-border-sm" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Loading drug list...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div id="about-section" style="display: none;">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-info-circle me-2"></i>About This Project</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-graduation-cap me-2 text-primary"></i>Educational Purpose</h5>
+                                    <p>This Drug Interaction Checker is an educational machine learning project designed to demonstrate the application of data science and ML concepts in healthcare informatics.</p>
+                                    
+                                    <h5><i class="fas fa-brain me-2 text-success"></i>Machine Learning Models</h5>
+                                    <ul>
+                                        <li><strong>Logistic Regression</strong> - Linear classification</li>
+                                        <li><strong>Decision Tree</strong> - Rule-based predictions</li>
+                                        <li><strong>Random Forest</strong> - Ensemble method</li>
+                                        <li><strong>Naive Bayes</strong> - Probabilistic classifier</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-database me-2 text-info"></i>Dataset Information</h5>
+                                    <p>The system uses a synthetic dataset created for educational purposes, containing drug interaction patterns and severity classifications.</p>
+                                    
+                                    <h5><i class="fas fa-shield-alt me-2 text-warning"></i>Important Disclaimer</h5>
+                                    <div class="alert alert-danger">
+                                        <strong>⚠️ Medical Disclaimer:</strong> This tool is strictly for educational purposes. Never use it for real medical decisions. Always consult qualified healthcare professionals for medical advice.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <h5><i class="fas fa-code me-2 text-secondary"></i>Technical Stack</h5>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="text-center p-3 bg-light rounded">
+                                        <i class="fab fa-python fs-2 text-primary"></i>
+                                        <div class="fw-bold">Python</div>
+                                        <small>Core Language</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center p-3 bg-light rounded">
+                                        <i class="fas fa-flask fs-2 text-success"></i>
+                                        <div class="fw-bold">Flask</div>
+                                        <small>Web Framework</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center p-3 bg-light rounded">
+                                        <i class="fas fa-chart-line fs-2 text-info"></i>
+                                        <div class="fw-bold">Scikit-learn</div>
+                                        <small>ML Library</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center p-3 bg-light rounded">
+                                        <i class="fab fa-bootstrap fs-2 text-purple"></i>
+                                        <div class="fw-bold">Bootstrap</div>
+                                        <small>UI Framework</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Models Section -->
+        <div id="models-section" style="display: none;">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-brain me-2"></i>Model Performance & Analysis</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="modelPerformanceContent">
+                                <div class="text-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-2">Loading model performance data...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Database Section -->
+        <div id="database-section" style="display: none;">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-database me-2"></i>Drug Database Explorer</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="databaseContent">
+                                <div class="text-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-2">Loading drug database...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div id="help-section" style="display: none;">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-question-circle me-2"></i>How to Use This Tool</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="accordion" id="helpAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#help1">
+                                            <i class="fas fa-play me-2"></i>Getting Started
+                                        </button>
+                                    </h2>
+                                    <div id="help1" class="accordion-collapse collapse show" data-bs-parent="#helpAccordion">
+                                        <div class="accordion-body">
+                                            <ol>
+                                                <li><strong>Enter Drug Names:</strong> Type the names of two drugs you want to check for interactions</li>
+                                                <li><strong>Click Check Interaction:</strong> The ML model will analyze the combination</li>
+                                                <li><strong>Review Results:</strong> See if an interaction exists, its severity, and confidence level</li>
+                                                <li><strong>Consider Alternatives:</strong> If high-severity interactions are detected, review suggested alternatives</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#help2">
+                                            <i class="fas fa-keyboard me-2"></i>Keyboard Shortcuts
+                                        </button>
+                                    </h2>
+                                    <div id="help2" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                                        <div class="accordion-body">
+                                            <ul>
+                                                <li><kbd>Ctrl</kbd> + <kbd>Enter</kbd> - Submit the form</li>
+                                                <li><kbd>Escape</kbd> - Clear the form</li>
+                                                <li><kbd>Ctrl</kbd> + <kbd>K</kbd> - Focus on first input field</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#help3">
+                                            <i class="fas fa-list me-2"></i>Batch Processing
+                                        </button>
+                                    </h2>
+                                    <div id="help3" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                                        <div class="accordion-body">
+                                            <p>For analyzing multiple drug combinations at once:</p>
+                                            <ol>
+                                                <li>Use the "Batch Processing" section</li>
+                                                <li>Enter drug pairs in the format: <code>Drug1,Drug2</code></li>
+                                                <li>Put each pair on a new line</li>
+                                                <li>Click "Process Batch" to analyze all pairs</li>
+                                            </ol>
+                                            <div class="alert alert-info">
+                                                <strong>Example:</strong><br>
+                                                <code>Warfarin,Aspirin<br>Metformin,Lisinopril<br>Ibuprofen,Omeprazole</code>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#help4">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>Understanding Results
+                                        </button>
+                                    </h2>
+                                    <div id="help4" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                                        <div class="accordion-body">
+                                            <h6>Interaction Status:</h6>
+                                            <ul>
+                                                <li><span class="badge bg-success">No Interaction</span> - Drugs are predicted to be safe together</li>
+                                                <li><span class="badge bg-danger">Interaction Detected</span> - Potential interaction identified</li>
+                                            </ul>
+                                            
+                                            <h6>Severity Levels:</h6>
+                                            <ul>
+                                                <li><span class="badge bg-warning text-dark">Low</span> - Minor interaction, monitor</li>
+                                                <li><span class="badge bg-warning">Moderate</span> - Significant interaction, caution advised</li>
+                                                <li><span class="badge bg-danger">High</span> - Major interaction, consider alternatives</li>
+                                            </ul>
+                                            
+                                            <h6>Confidence Score:</h6>
+                                            <p>Indicates how certain the model is about its prediction (0-100%)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light mt-5 py-4">
+        <div class="container text-center">
+            <p class="mb-0">
+                <i class="fas fa-graduation-cap me-2"></i>
+                Drug Interaction Checker - Educational ML Project
+            </p>
+            <small class="text-muted">
+                Built with Python, Flask, Scikit-learn, and Bootstrap
+            </small>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
